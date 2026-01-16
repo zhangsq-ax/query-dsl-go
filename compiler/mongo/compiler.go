@@ -76,10 +76,36 @@ func (c *Compiler) compileCondition(payload any) (bson.M, error) {
 		}, nil
 
 	case querydsl.OpLike:
+		s, ok := cond.Value.(string)
+		if !ok {
+			return nil, errors.New("like value must be string")
+		}
 		return bson.M{
 			field: bson.M{
-				"$regex":   cond.Value,
+				"$regex": ".*?" + s + ".*?",
+			},
+		}, nil
+
+	case querydsl.OpLikeI:
+		s, ok := cond.Value.(string)
+		if !ok {
+			return nil, errors.New("like value must be string")
+		}
+		return bson.M{
+			field: bson.M{
+				"$regex":   ".*?" + s + ".*?",
 				"$options": "i",
+			},
+		}, nil
+
+	case querydsl.OpPrefixLike:
+		s, ok := cond.Value.(string)
+		if !ok {
+			return nil, errors.New("like value must be string")
+		}
+		return bson.M{
+			field: bson.M{
+				"$regex": "^" + s + ".*?",
 			},
 		}, nil
 
