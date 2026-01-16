@@ -2,6 +2,7 @@ package mongoCompiler
 
 import (
 	"errors"
+	"regexp"
 
 	"github.com/zhangsq-ax/query-dsl-go"
 	"go.mongodb.org/mongo-driver/bson"
@@ -82,7 +83,7 @@ func (c *Compiler) compileCondition(payload any) (bson.M, error) {
 		}
 		return bson.M{
 			field: bson.M{
-				"$regex": ".*?" + s + ".*?",
+				"$regex": ".*?" + regexp.QuoteMeta(s) + ".*?",
 			},
 		}, nil
 
@@ -93,7 +94,7 @@ func (c *Compiler) compileCondition(payload any) (bson.M, error) {
 		}
 		return bson.M{
 			field: bson.M{
-				"$regex":   ".*?" + s + ".*?",
+				"$regex":   ".*?" + regexp.QuoteMeta(s) + ".*?",
 				"$options": "i",
 			},
 		}, nil
@@ -105,7 +106,7 @@ func (c *Compiler) compileCondition(payload any) (bson.M, error) {
 		}
 		return bson.M{
 			field: bson.M{
-				"$regex": "^" + s + ".*?",
+				"$regex": "^" + regexp.QuoteMeta(s),
 			},
 		}, nil
 
