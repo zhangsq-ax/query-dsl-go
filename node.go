@@ -15,3 +15,28 @@ type Node struct {
 	Children []*Node
 	Payload  any // Condition
 }
+
+func Cond(field string, op Operator, value any) *Node {
+	return &Node{
+		Type: NodeCond,
+		Payload: Condition{
+			Field: field,
+			Op:    op,
+			Value: value,
+		},
+	}
+}
+
+func Or(children ...*Node) *Node {
+	return &Node{
+		Type:     NodeOr,
+		Children: children,
+	}
+}
+
+func And(children ...*Node) *Node {
+	return &Node{
+		Type:     NodeAnd,
+		Children: children,
+	}
+}
